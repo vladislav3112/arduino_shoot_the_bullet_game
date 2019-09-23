@@ -1,6 +1,7 @@
 #include "GameField.h"
 #include "windows.h"
 #include <iostream>
+#include <conio.h>
 //..
 const int LCD_WIDTH = 84;
 const int LCD_HEIGHT = 48;
@@ -20,19 +21,26 @@ int main() {
 	Player player;
 	int i = 0;
 	char input;
+	std::cout << "WARNING! fullscreen for correct displaying" << std::endl;
 	std::cout << " press w to move up;" << std::endl;
 	std::cout << " press a to move right;" << std::endl;
 	std::cout << " press s to move left;" << std::endl;
 	std::cout << " press d to move right;" << std::endl;
 	std::cout << " press q to move quit;" << std::endl;
 	std::cout << " press f to shoot;" << std::endl;
+	std::cout << "******************" << std::endl;
+	std::cout << "[] - undestruct block" << std::endl;
+	std::cout << "{} - destruct block" << std::endl;
+	std::cout << "<> - player" << std::endl;
+	system("pause");
+
 	while (!player.field.isGameOver) {
 
 		player.field.CreateNewLine(i);
 		for (int action_idx = 0; action_idx < 10; action_idx++) {
 			if (!player.field.isGameOver) {
 				player.field.PrintField();
-				std::cin >> input;
+				input =_getch();
 
 				if (input == 'w') player.moveUp();
 				else if (input == 'a') player.moveLeft();
@@ -44,6 +52,7 @@ int main() {
 					std::cout << "Game over! your score: "
 						<< player.field.getScore() << std::endl;
 					std::cout << "Press any key to exit: " << std::endl;
+					player.field.setHiscore(player.field.getScore());
 					system("pause");
 				}
 			}

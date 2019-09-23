@@ -15,6 +15,7 @@ public:
 	int getFieldAt(int w,int h) const;
 	void setFieldAt(int w, int h, int val);
 	void setScore(int s) { score = s; };
+	void setHiscore(int s) { hiscore = s; };
 private:
 	int score;
 	int hiscore;

@@ -42,7 +42,10 @@ void GameField::CreateNewLine(int line_num) {
 
 void GameField::PrintField()
 {
+	system("cls");
+	std::cout << "your score = " << score << std::endl;
 	for (int i = 0; i < LCD_HEIGHT; i++) {
+		
 		std::cout << LCD_HEIGHT - i;
 			for (int j = 0; j < LCD_WIDTH; j++){
 				
@@ -62,7 +65,6 @@ Player::Player()
 	height = LCD_HEIGHT - 1;
 	field.setFieldAt(42, LCD_HEIGHT - 1, 3);//does not work
 }
-
 Player::Player(int w, int h)
 {
 	width = w;
