@@ -31,11 +31,11 @@ int main() {
 	std::cout << "[] - undestruct block" << std::endl;
 	std::cout << "{} - destruct block" << std::endl;
 	std::cout << "<> - player" << std::endl;
-
+	_getch();
 	while (!player.field.isGameOver) {
 
 		player.field.CreateNewLine(i);
-		for (int action_idx = 0; action_idx < 10; action_idx++) {
+		for (int action_idx = 0; action_idx < 20; action_idx++) {
 			if (!player.field.isGameOver) {	
 				player.field.PrintField();		
 				input = _getch();

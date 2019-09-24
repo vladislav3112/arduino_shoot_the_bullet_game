@@ -124,6 +124,3 @@ void Player::shoot()
 		}
 	}
 }
-
-
-
