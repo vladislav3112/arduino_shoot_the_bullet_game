@@ -61,6 +61,5 @@ int main() {
 		if (i>=LCD_WIDTH)i = 0;
 
 	}
-	player.field.isGameOver = false;
 	return 0;
 }
