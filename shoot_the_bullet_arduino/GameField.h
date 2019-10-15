@@ -1,7 +1,7 @@
 class GameField {
 public:
   GameField();
-  enum size{ LCD_WIDTH = 84, LCD_HEIGHT = 48};
+  static const int FIELD_SIZE = 16;
   bool isGameOver = false;
   void CreateNewLine(int line_num);
   void ChangeLines();
@@ -10,8 +10,6 @@ public:
   void PrintUnDestructBlock(int width, int height);
   int getScore() { return score; }
   int getHighscore() { return hiscore; }
-  int getWtdth() { return LCD_HEIGHT; }
-  int getHeight() { return LCD_WIDTH; }
   int getFieldAt(int w,int h) const;
   void setFieldAt(int w, int h, int val);
   void setScore(int s) { score = s; };
@@ -19,7 +17,7 @@ public:
 private:
   int score;
   int hiscore;
-  int game_field[LCD_HEIGHT][LCD_WIDTH];
+  int game_field[FIELD_SIZE][FIELD_SIZE];
 };
 
 class Player :public GameField {
@@ -32,8 +30,8 @@ public:
   void moveRight();
   void moveUp();
   void moveDown();
-  void shoot();
-  int  getWeight() { return width; }
+  int shoot_check(int w, int h);
+  int getWidth() { return width; }
   int getHeight() { return height; }
   int SetHeight(int h) { h = height; }
   int SetWidth(int h) { h = width; }

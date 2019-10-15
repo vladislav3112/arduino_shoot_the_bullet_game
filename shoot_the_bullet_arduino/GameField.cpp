@@ -4,8 +4,8 @@ GameField::GameField()
 {
   score = 0;
   hiscore = 0;
-  for (int i = 0; i < LCD_HEIGHT; i++) {
-    for (int j = 0; j < LCD_WIDTH ; j++)
+  for (int i = 0; i < FIELD_SIZE; i++) {
+    for (int j = 0; j < FIELD_SIZE ; j++)
       game_field[i][j] = 0;
   }
 }
@@ -22,7 +22,7 @@ void GameField::setFieldAt(int w, int h, int val)
 void GameField::CreateNewLine(int line_num) {
   srand(time(NULL));
   int randNum;
-  for (int i = 0; i < LCD_WIDTH; i++) {
+  for (int i = 0; i < FIELD_SIZE; i++) {
     randNum = 1 + rand() % 10;//check randomizer
     if (randNum <= 2)
     {
@@ -45,8 +45,8 @@ void GameField::CreateNewLine(int line_num) {
 Player::Player()
 {
   width = 42;
-  height = LCD_HEIGHT - 1;
-  field.setFieldAt(42, LCD_HEIGHT - 1, 3);//does not work
+  height = FIELD_SIZE - 1;
+  field.setFieldAt(42, FIELD_SIZE - 1, 3);//does not work
 }
 Player::Player(int w, int h)
 {
@@ -66,7 +66,7 @@ void Player::moveLeft()
 }
 void Player::moveRight()
 {
-  if (width != LCD_WIDTH - 1) {
+  if (width != FIELD_SIZE - 1) {
     width++;
     int pos_idx = field.getFieldAt(width, height);
     if ((pos_idx == 1) | (pos_idx == 2)) field.isGameOver = true;//game over
@@ -87,7 +87,7 @@ void Player::moveUp()
 void Player::moveDown()
 {
 
-  if (height != LCD_HEIGHT - 1) {
+  if (height != FIELD_SIZE - 1) {
     height++;
     int pos_idx = field.getFieldAt(width, height);
     if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
@@ -95,16 +95,15 @@ void Player::moveDown()
     field.setFieldAt(width, height-1, 0);
   }
 }
-void Player::shoot()
+int Player::shoot_check(int w, int h)
 {
-  for (int i = height + 1; i >= 0; i--) {
-    //draw bullet
-    if (field.getFieldAt(width, i) == 1)break;//and draw bullet
-    if (field.getFieldAt(width, i) == 2) {
+    if (field.getFieldAt(w, h) == 1)return 1;
+    if (field.getFieldAt(w, h) == 2) {
       //std::cout << "You destroyed block!  +100 points" << std::endl;
       field.setScore(field.getScore() + 100);
-      field.setFieldAt(width,i,0);
-      break;
+      field.setFieldAt(w,h,0);
+      //ClrBullet(width,i);//??
+      return 2;
     }
-  }
+    return 0;
 }
