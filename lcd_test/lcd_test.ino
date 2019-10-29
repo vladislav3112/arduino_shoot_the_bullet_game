@@ -52,11 +52,15 @@ void PrintDestructBlock(int width, int height){//в файл вывода на �
 void PrintUndestructBlock(int width, int height){
       lcd.print("O",width,height);
 }
-void DrawBullet(int width, int height){
+void DrawBullet(int width, int height, int player_x,int player_y){
     lcd.clrScr();
     lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
     lcd.drawLine(width*3+1,height*3,width*3+1,height*3+2); // to fill square
     lcd.drawLine(width*3,height*3+1,width*3+2,height*3+1);
+
+    lcd.drawRect(player_x*3,player_y*3,player_x*3+2,player_y*3+2);
+    lcd.drawLine(player_x*3+1,player_y*3,player_x*3+1,player_y*3+2); // to fill square
+    lcd.drawLine(player_x*3,player_y*3+1,player_x*3+2,player_y*3+1);
     lcd.update();
 }
 void ClrBullet(int width, int height){
@@ -83,6 +87,7 @@ int h=FIELD_SIZE;
 
 
 void loop() {
+  //DrawBullet(0,0);
   if(digitalRead(UP_pin)==LOW)//onPress
     Serial.println("UP!");
   if(digitalRead(DOWN_pin)==LOW)//onPress
@@ -98,10 +103,13 @@ void loop() {
     if(w!=0)w-=1;
     DrawBullet(w,h);
   }
-  if(h==0){w=0;h=FIELD_SIZE;}
-  if(digitalRead(FIRE_pin)==LOW)//onPress
+  if(digitalRead(FIRE_pin)==LOW){//onPress
     Serial.println("FIRE!");
-   
+    for(int i=FIELD_SIZE;i>=0;i--){
+      DrawBullet(w,i,w,h);
+      delay(50);
+    }
+    }
   delay(200);//perfect delay
   }
  
