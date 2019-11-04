@@ -48,24 +48,35 @@ LCD5110 lcd(9,10,11,12,13); // LCD5110(SCK, MOSI, DC, RST, CS);
 // initialize the library with the numbers of the interface pins
 
 
-void PrintDestructBlock(int width, int height){//в файл вывода на дисплей
-      lcd.print("o",width,height);//только 1 раз нужно
-}
-void PrintUndestructBlock(int width, int height){
-      lcd.print("O",width,height);
-}
 void DrawPlayer(int width, int height){// h, w: left_top of object 
+    lcd.setPixel(width*3,height*3);       // . .
+    lcd.setPixel(width*3+1,height*3+1);   //  .
+    lcd.setPixel(width*3+2,height*3+2);   // . .
+    lcd.setPixel(width*3+2,height*3);     //-player display
+    lcd.setPixel(width*3,height*3+2);
+    lcd.update();
+}
+void DrawBullet(int width, int height){// improve
     lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
     lcd.drawLine(width*3+1,height*3,width*3+1,height*3+2); // to fill square
     lcd.drawLine(width*3,height*3+1,width*3+2,height*3+1);
     lcd.update();
 }
-void DrawBullet(int width, int height){// improve
-    lcd.setPixel(width*3+1,height*3+1);
+void ClrBullet(int width, int height){
+    lcd.clrPixel(width*3,height*3);
+    lcd.clrPixel(width*3,height*3+1);
+    lcd.clrPixel(width*3,height*3+2);
+    lcd.clrPixel(width*3+1,height*3);
+    lcd.clrPixel(width*3+1,height*3+1);
+    lcd.clrPixel(width*3+1,height*3+2);
+    lcd.clrPixel(width*3+2,height*3);
+    lcd.clrPixel(width*3+2,height*3+1);
+    lcd.clrPixel(width*3+2,height*3+2);
     lcd.update();
 }
 void DrawBlock(int width, int height){
-  //
+  lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
+  lcd.update();
 }
 void GameField::PrintField()//modify
 {
@@ -75,9 +86,9 @@ void GameField::PrintField()//modify
     
     //std::cout << LCD_HEIGHT - i
       for (int j = 0; j < FIELD_SIZE; j++){
-        if (game_field[i][j] == 1)lcd.print("O",i,j); //undestructBlock
-        else if (game_field[i][j] == 2)lcd.print("o",i,j); //destructBlock
-        else if (game_field[i][j] == 3)lcd.print("p",i,j); //player
+        if (game_field[i][j] == 1)DrawPlayer(i,j); //undestructBlock
+        else if (game_field[i][j] == 2)DrawBlock(i,j); //destructBlock
+        else if (game_field[i][j] == 3)DrawPlayer(i,j); //player
         
     }
   }
@@ -111,23 +122,27 @@ curr_time = millis();
       player.field.CreateNewLine(curr_line);
       while(curr_time - prev_time < 6000) {
       if (!player.field.isGameOver) { 
-        player.field.PrintField();    
-        if(digitalRead(UP)==LOW) { player.moveUp(); //синхронизация движений player'а и Changeline() метода
+        player.field.PrintField();
+        lcd.print("your score",RIGHT,0);
+        lcd.printNumI(player.field.getScore(),RIGHT,16);
+            
+        if(digitalRead(UP_pin)==LOW) { player.moveUp(); //синхронизация движений player'а и Changeline() метода
             Serial.println("UP!");
         }
-        else if(digitalRead(DOWN)==LOW) {player.moveDown();
+        else if(digitalRead(DOWN_pin)==LOW) {player.moveDown();
             Serial.println("DOWN!");
         }
-        else if(digitalRead(RIGHT)==LOW){ player.moveRight();
+        else if(digitalRead(RIGHT_pin)==LOW){ player.moveRight();
             Serial.println("RIGHT!");
         }
-        else if(digitalRead(LEFT)==LOW){ player.moveLeft();//delay(50);
+        else if(digitalRead(LEFT_pin)==LOW){ player.moveLeft();//delay(50);
             Serial.println("LEFT!");
         }
         else if(digitalRead(6)==LOW){
           Serial.println("FIRE!");
           for (int i=1; i<FIELD_SIZE; i++){
             DrawBullet(player.getWidth(),i);
+            if(i>1)ClrBullet(player.getWidth(),i-1);
             if(player.shoot_check(player.getWidth(),i)==1)DrawBlock(player.getWidth(),i);    //bullet on block situation
             if(player.shoot_check(player.getWidth(),i)!=0) break;
             
@@ -136,6 +151,7 @@ curr_time = millis();
         }
         if (player.field.isGameOver) {
           player.field.getScore();
+          lcd.print("GAME OVER",RIGHT,24);
           player.field.setHiscore(player.field.getScore());
           ///display score;
         }
