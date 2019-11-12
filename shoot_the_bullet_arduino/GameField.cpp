@@ -20,7 +20,7 @@ void GameField::setFieldAt(int w, int h, int val)
 }
 
 void GameField::CreateNewLine(int line_num) {
-  srand(time(NULL));
+  
   int randNum;
   for (int i = 0; i < FIELD_SIZE; i++) {
     randNum = 1 + rand() % 10;//check randomizer
@@ -44,9 +44,9 @@ void GameField::CreateNewLine(int line_num) {
 
 Player::Player()
 {
-  width = 42;
+  width = 8;
   height = FIELD_SIZE - 1;
-  field.setFieldAt(42, FIELD_SIZE - 1, 3);//does not work
+  field.setFieldAt(8, FIELD_SIZE - 1, 3);//does not work
 }
 Player::Player(int w, int h)
 {
@@ -95,7 +95,7 @@ void Player::moveDown()
     field.setFieldAt(width, height-1, 0);
   }
 }
-int Player::shoot_check(int w, int h)
+int Player::shoot_check(int h, int w)
 {
     if (field.getFieldAt(w, h) == 1)return 1;
     if (field.getFieldAt(w, h) == 2) {

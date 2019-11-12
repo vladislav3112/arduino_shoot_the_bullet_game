@@ -52,15 +52,12 @@ void PrintDestructBlock(int width, int height){//в файл вывода на �
 void PrintUndestructBlock(int width, int height){
       lcd.print("O",width,height);
 }
-void DrawBullet(int width, int height, int player_x,int player_y){
+void DrawBullet(int width, int height){
     lcd.clrScr();
     lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
     lcd.drawLine(width*3+1,height*3,width*3+1,height*3+2); // to fill square
     lcd.drawLine(width*3,height*3+1,width*3+2,height*3+1);
 
-    lcd.drawRect(player_x*3,player_y*3,player_x*3+2,player_y*3+2);
-    lcd.drawLine(player_x*3+1,player_y*3,player_x*3+1,player_y*3+2); // to fill square
-    lcd.drawLine(player_x*3,player_y*3+1,player_x*3+2,player_y*3+1);
     lcd.update();
 }
 void ClrBullet(int width, int height){
@@ -74,10 +71,12 @@ void setup() {
       pinMode(RIGHT_pin, INPUT_PULLUP);
       pinMode(LEFT_pin, INPUT_PULLUP);
       pinMode(FIRE_pin, INPUT_PULLUP);
+      pinMode(7,OUTPUT);
+      digitalWrite(7,LOW);
   // set up the LCD's number of columns and rows:
   //lcd.begin(LCD_WIDTH,LCD_HEIGHT);
   // Print a message to the LCD.
-  lcd.InitLCD();
+  lcd.InitLCD(120);
   //lcd.print("p",20,LCD_HEIGHT);
   Serial.begin(115200);
 }
@@ -106,7 +105,7 @@ void loop() {
   if(digitalRead(FIRE_pin)==LOW){//onPress
     Serial.println("FIRE!");
     for(int i=FIELD_SIZE;i>=0;i--){
-      DrawBullet(w,i,w,h);
+      DrawBullet(w,i);
       delay(50);
     }
     }
