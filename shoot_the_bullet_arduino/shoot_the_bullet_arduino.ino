@@ -47,6 +47,7 @@ unsigned int curr_time;
 #include <avr/pgmspace.h>
 LCD5110 lcd(9,10,11,13,12); // LCD5110(SCK, MOSI, DC, RST, CS);
 
+extern unsigned char SmallFont[];
 // initialize the library with the numbers of the interface pins
 
 
@@ -86,6 +87,7 @@ void GameField::PrintField()//modify
   //system("cls");
   //std::cout << "your score = " << score << std::endl;
   Serial.println("draw field");
+  lcd.print("SCORE",RIGHT,8);
   for (int i = 0; i < FIELD_SIZE; i++) {
     //std::cout << LCD_HEIGHT - i
       for (int j = 0; j < FIELD_SIZE; j++){
@@ -117,6 +119,7 @@ void setup() {
   //lcd.begin(LCD_WIDTH,LCD_HEIGHT);
   // Print a message to the LCD.
   lcd.InitLCD();
+  lcd.setFont(SmallFont);
   //DrawPlayer(15,8);
   Serial.begin(115200);
   prev_time=millis();
@@ -167,6 +170,7 @@ if(curr_line == 0) {
         }
         else if(digitalRead(FIRE_pin)==LOW){
            Serial.println("FIRE!");
+           
             for (int i=1; i<=FIELD_SIZE; i++){
             DrawBullet(FIELD_SIZE-i,player.getWidth());
             if(i>1)ClrBullet(FIELD_SIZE-i+1,player.getWidth());
@@ -174,6 +178,7 @@ if(curr_line == 0) {
               DrawBlock(player.getWidth(),i);
               break;
             }//bullet on block situation
+            
             if(player.shoot_check(player.getWidth(),i)!=0) {
               Serial.println("log_shoot_check_=  ");
               Serial.print(player.shoot_check(player.getWidth(),i));
@@ -192,8 +197,13 @@ if(curr_line == 0) {
 
       
         if (player.field.isGameOver) {
+          lcd.clrScr();
+          
           player.field.getScore();
-          lcd.print("GAME OVER",RIGHT,24);
+          lcd.print("GAME OVER",CENTER,24);
+          lcd.print("your score",CENTER, 32);
+          lcd.printNumI(48,36,player.field.getScore());
+          lcd.update();
           player.field.setHiscore(player.field.getScore());
           ///display score;
         }
