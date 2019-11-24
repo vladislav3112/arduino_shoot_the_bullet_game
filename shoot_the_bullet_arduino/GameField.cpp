@@ -22,21 +22,24 @@ void GameField::setFieldAt(int w, int h, int val)
 void GameField::CreateNewLine(int line_num) {
   
   int randNum;
-  for (int i = 0; i < FIELD_SIZE; i++) {
-    randNum = 1 + rand() % 10;//check randomizer
-    if (randNum <= 2)
-    {
-      if (game_field[line_num][i] == 3)isGameOver = true;
-      //PrintUnDestructBlock(i, line_num);
-      game_field[line_num][i] = 1;
-    }
-    else if ((randNum <= 6) and (randNum >= 3))
-    {
-      if (game_field[line_num][i] == 3)isGameOver = true;
-      //PrintDestructBlock(i, line_num);
-      game_field[line_num][i] = 2;
+ 
+  for (int i = FIELD_SIZE - 2; i > 0; i--) {
+    for (int j = 0; j < FIELD_SIZE; j++) {
+      if (game_field[i-1][j] != 3 & game_field[i][j] != 3)game_field[i][j] = game_field[i - 1][j];
     }
   }
+  for (int i = 0; i < FIELD_SIZE; i++) {
+    randNum = 1 + rand() % 14;//check randomizer
+    if (randNum <= 2)game_field[line_num][i] = 1;
+    else if ((randNum <= 7) and (randNum >= 3))game_field[line_num][i] = 2;
+    else game_field[line_num][i] = 0;
+  } 
+  //
+  for (int j = 0; j < FIELD_SIZE; j++) {
+    if((game_field[FIELD_SIZE - 1][j]==3)&(game_field[FIELD_SIZE - 2][j] != 0))isGameOver = true;
+    if(game_field[FIELD_SIZE - 1][j] != 3 & game_field[FIELD_SIZE - 2][j]!=3)game_field[FIELD_SIZE -1][j] = game_field[FIELD_SIZE - 2][j];
+  }
+  
 }
 
 
@@ -95,7 +98,7 @@ void Player::moveDown()
     field.setFieldAt(width, height-1, 0);
   }
 }
-int Player::shoot_check(int h, int w)
+int Player::shoot_check(int w, int h)
 {
     if (field.getFieldAt(w, h) == 1)return 1;
     if (field.getFieldAt(w, h) == 2) {

@@ -37,6 +37,7 @@ const byte FIELD_SIZE = 16;
 const byte SCORE_WIDTH = 32;
 unsigned int prev_time;
 unsigned int curr_time;
+int local_score=0;
 #define RIGHT_pin 3
 #define LEFT_pin 5
 #define UP_pin 2
@@ -86,8 +87,9 @@ void GameField::PrintField()//modify
   lcd.clrScr();
   //system("cls");
   //std::cout << "your score = " << score << std::endl;
-  Serial.println("draw field");
+  //Serial.println("draw field");
   lcd.print("SCORE",RIGHT,8);
+  lcd.printNumI(local_score,RIGHT, 16);
   for (int i = 0; i < FIELD_SIZE; i++) {
     //std::cout << LCD_HEIGHT - i
       for (int j = 0; j < FIELD_SIZE; j++){
@@ -95,9 +97,9 @@ void GameField::PrintField()//modify
         else if (game_field[i][j] == 2)DrawBlock(i,j); //destructBlock
         else if (game_field[i][j] == 3){
           DrawPlayer(i,j); //player
-          Serial.print(i);
-          Serial.print(" ");
-          Serial.print(j);
+          //Serial.print(i);
+          //Serial.print(" ");
+          //Serial.print(j);
         }
         
     }
@@ -124,8 +126,8 @@ void setup() {
   Serial.begin(115200);
   prev_time=millis();
 }
-int curr_line;
 
+int curr_line;
 
 
 void loop() {
@@ -133,64 +135,71 @@ Player player;
 curr_line = 0;
 
 if(curr_line == 0) {
-    player.field.CreateNewLine(curr_line);
+    player.field.CreateNewLine(0);
     player.field.PrintField();
 }  while (!player.field.isGameOver) {
       curr_time = millis();
-      if(curr_time-prev_time>2000) {//time-millis()
+      
+      if(curr_time-prev_time>6000) {//time-millis()
         Serial.print("new line created");
-          player.field.CreateNewLine(++curr_line);
+          player.field.CreateNewLine(0);
           player.field.PrintField();
           prev_time = millis();
       }
         if(digitalRead(UP_pin)==LOW) { 
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveUp(); //синхронизация движений player'а и Changeline() метода
-            Serial.println("UP!");
+            //Serial.println("UP!");
             DrawPlayer(player.getHeight(),player.getWidth());
             
         }
         else if(digitalRead(DOWN_pin)==LOW) {
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveDown();
-            Serial.println("DOWN!");
+            //Serial.println("DOWN!");
             player.field.PrintField();
         }
         else if(digitalRead(RIGHT_pin)==LOW){ 
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveRight();
-            Serial.println("RIGHT!");
+            //Serial.println("RIGHT!");
             DrawPlayer(player.getHeight(),player.getWidth());
         }
         else if(digitalRead(LEFT_pin)==LOW){ 
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveLeft();//delay(50);
-            Serial.println("LEFT!");
+            //Serial.println("LEFT!");
             DrawPlayer(player.getHeight(),player.getWidth());
         }
         else if(digitalRead(FIRE_pin)==LOW){
-           Serial.println("FIRE!");
+          //Serial.println("FIRE!");
            
-            for (int i=1; i<=FIELD_SIZE; i++){
+            for (int i=0; i<=FIELD_SIZE; i++){
             DrawBullet(FIELD_SIZE-i,player.getWidth());
             if(i>1)ClrBullet(FIELD_SIZE-i+1,player.getWidth());
-            if(player.shoot_check(player.getWidth(),i)==1){
-              DrawBlock(player.getWidth(),i);
+            if(i==FIELD_SIZE)ClrBullet(0,player.getWidth());
+            if(player.shoot_check(player.getWidth(),FIELD_SIZE-i)==1){
+              DrawPlayer(FIELD_SIZE-i,player.getWidth());
               break;
             }//bullet on block situation
-            
-            if(player.shoot_check(player.getWidth(),i)!=0) {
-              Serial.println("log_shoot_check_=  ");
-              Serial.print(player.shoot_check(player.getWidth(),i));
-              Serial.println("coordinates");
-              Serial.print(player.getWidth());
-              Serial.print(" ");
-              Serial.print(i);
-              Serial.println("score=  ");
-              Serial.println(player.field.getScore());
-              Serial.println("log_shoot_check_=");
+            if(player.shoot_check(player.getWidth(),FIELD_SIZE-i)==2){
+              ClrBullet(FIELD_SIZE-i,player.getWidth());
               break;
             }
+            
+            if(player.shoot_check(player.getWidth(),FIELD_SIZE-i)!=0) {
+              //Serial.println("log_shoot_check_=  ");
+              //Serial.print(player.shoot_check(player.getWidth(),i));
+              //Serial.println("coordinates");
+              //Serial.print(player.getWidth());
+              //Serial.print(" ");
+              //Serial.print(i);
+              //Serial.println("score=  ");
+              //Serial.println(player.field.getScore());
+              //Serial.println("log_shoot_check_=");
+              break;
+            }
+            local_score = player.field.getScore();
           //button F         
           }
         }
@@ -200,10 +209,12 @@ if(curr_line == 0) {
           lcd.clrScr();
           
           player.field.getScore();
-          lcd.print("GAME OVER",CENTER,24);
-          lcd.print("your score",CENTER, 32);
-          lcd.printNumI(48,36,player.field.getScore());
+          lcd.print("GAME OVER",CENTER,16);
+          lcd.print("your score",CENTER, 24);
+          lcd.printNumI(local_score,CENTER,32);
           lcd.update();
+          local_score=0;
+          prev_time=millis();
           player.field.setHiscore(player.field.getScore());
           ///display score;
         }

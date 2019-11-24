@@ -34,7 +34,7 @@ int main() {
 	_getch();
 	while (!player.field.isGameOver) {
 
-		player.field.CreateNewLine(i);
+		player.field.CreateNewLine(0);
 		for (int action_idx = 0; action_idx < 20; action_idx++) {
 			if (!player.field.isGameOver) {	
 				player.field.PrintField();		
