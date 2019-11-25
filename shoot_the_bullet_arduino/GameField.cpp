@@ -22,7 +22,10 @@ void GameField::setFieldAt(int w, int h, int val)
 void GameField::CreateNewLine(int line_num) {
   
   int randNum;
- 
+  for (int j = 0; j < FIELD_SIZE; j++) {
+    if((game_field[FIELD_SIZE - 1][j]==3)&(game_field[FIELD_SIZE - 2][j] != 0))isGameOver = true;
+    if(game_field[FIELD_SIZE - 1][j] != 3 & game_field[FIELD_SIZE - 2][j]!=3)game_field[FIELD_SIZE -1][j] = game_field[FIELD_SIZE - 2][j];
+  }
   for (int i = FIELD_SIZE - 2; i > 0; i--) {
     for (int j = 0; j < FIELD_SIZE; j++) {
       if (game_field[i-1][j] != 3 & game_field[i][j] != 3)game_field[i][j] = game_field[i - 1][j];
@@ -35,10 +38,7 @@ void GameField::CreateNewLine(int line_num) {
     else game_field[line_num][i] = 0;
   } 
   //
-  for (int j = 0; j < FIELD_SIZE; j++) {
-    if((game_field[FIELD_SIZE - 1][j]==3)&(game_field[FIELD_SIZE - 2][j] != 0))isGameOver = true;
-    if(game_field[FIELD_SIZE - 1][j] != 3 & game_field[FIELD_SIZE - 2][j]!=3)game_field[FIELD_SIZE -1][j] = game_field[FIELD_SIZE - 2][j];
-  }
+ 
   
 }
 

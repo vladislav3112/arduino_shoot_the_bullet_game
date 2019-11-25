@@ -58,13 +58,11 @@ void DrawPlayer(int height, int width){// h, w: left_top of object
     lcd.setPixel(width*3,height*3+2);
     lcd.setPixel(width*3+1,height*3+2);
     lcd.setPixel(width*3+1,height*3);
-    lcd.update();
 }
 void DrawBullet(int height, int width){// improve
     lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
     lcd.drawLine(width*3+1,height*3,width*3+1,height*3+2); // to fill square
     lcd.drawLine(width*3,height*3+1,width*3+2,height*3+1);
-    lcd.update();
 }
 void DrawUndestructBlock(int height, int width){// h, w: left_top of object 
     lcd.setPixel(width*3,height*3);       // . .
@@ -72,7 +70,6 @@ void DrawUndestructBlock(int height, int width){// h, w: left_top of object
     lcd.setPixel(width*3+2,height*3+2);   // . .
     lcd.setPixel(width*3+2,height*3);     //-display
     lcd.setPixel(width*3,height*3+2);
-    lcd.update();
 }
 void ClrBullet(int height, int width){
     lcd.clrPixel(width*3,height*3);
@@ -84,11 +81,9 @@ void ClrBullet(int height, int width){
     lcd.clrPixel(width*3+2,height*3);
     lcd.clrPixel(width*3+2,height*3+1);
     lcd.clrPixel(width*3+2,height*3+2);
-    lcd.update();
 }
 void DrawBlock(int height, int width){
   lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
-  lcd.update();
 }
 void GameField::PrintField()//modify
 {
@@ -112,6 +107,7 @@ void GameField::PrintField()//modify
         
     }
   }
+  lcd.update();
 }
 
 
@@ -143,7 +139,7 @@ curr_line = 0;//start trigger
   while (!player.field.isGameOver) {
       curr_time = millis();
       
-      if(curr_time-prev_time>6000 | curr_line == 0) {//time-millis()
+      if(curr_time-prev_time > 5000 | curr_line == 0) {//time-millis()
         Serial.print("new line created");
           player.field.CreateNewLine(0);
           player.field.PrintField();
@@ -156,6 +152,7 @@ curr_line = 0;//start trigger
             player.moveRight();
             //Serial.println("RIGHT!");
             DrawPlayer(player.getHeight(),player.getWidth());
+            lcd.update();
         }
         
         else if(digitalRead(LEFT_pin)==LOW){ 
@@ -163,6 +160,7 @@ curr_line = 0;//start trigger
             player.moveLeft();//delay(50);
             //Serial.println("LEFT!");
             DrawPlayer(player.getHeight(),player.getWidth());
+            lcd.update();
         }
         
         else if(digitalRead(FIRE_pin)==LOW){
@@ -173,6 +171,7 @@ curr_line = 0;//start trigger
               if(i>2)ClrBullet(FIELD_SIZE-i+1,player.getWidth()); 
               if(bullet_flag){
                 DrawUndestructBlock(FIELD_SIZE-i+1,player.getWidth());
+                lcd.update();
                 break;
               }
               if(i!=1)DrawBullet(FIELD_SIZE-i,player.getWidth());             
@@ -188,7 +187,8 @@ curr_line = 0;//start trigger
               }
               delay(40);
             local_score = player.field.getScore();
-          //button F         
+          //button F       
+            lcd.update();  
           }
         }
 
