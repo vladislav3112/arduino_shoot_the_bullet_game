@@ -205,8 +205,7 @@ curr_line = 0;//start trigger
           player.field.setHiscore(player.field.getScore());
           ///display score;
         }
-        delay(50);
-      
+        delay(50);   
     
     
     //print player
