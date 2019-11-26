@@ -3,9 +3,10 @@
 
 Игра  shoot the bullet(#2), пример:	https://www.microsoft.com/en-us/p/brick-game-simulator/9nblggh4qfmw  
 Здесь содержатся(или будут позже) две версии: консольное демо(test)  
-и финальная версия для arduino one  + lcd5110 + joystik shield.  
+и финальная версия для arduino one  + lcd5110 + joystik shield.    
+Используется библиотека LCD5110_Graph.zip
 
-#Заметки по консольной версии:
+### Заметки по консольной версии:
 
 Нужно растянуть консоль на весь экран(48*84 клетки, поле может не поместиться)  
 
