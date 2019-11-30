@@ -28,8 +28,6 @@ public:
   Player(int w, int h);
   void moveLeft();
   void moveRight();
-  void moveUp();
-  void moveDown();
   int shoot_check(int w, int h);
   int getWidth() { return width; }
   int getHeight() { return height; }

@@ -1,34 +1,3 @@
-/*
-  LiquidCrystal Library - Hello World
-
-  The circuit:
- * LCD RS pin to digital pin 12
- * LCD Enable pin to digital pin 11
- * LCD D4 pin to digital pin 5
- * LCD D5 pin to digital pin 4
- * LCD D6 pin to digital pin 3
- * LCD D7 pin to digital pin 2
- * LCD R/W pin to ground
- * LCD VSS pin to ground
- * LCD VCC pin to 5V
- * 10K resistor:
- * ends to +5V and ground
- * wiper to LCD VO pin (pin 3)
-
- Library originally added 18 Apr 2008
- by David A. Mellis
- library modified 5 Jul 2009
- by Limor Fried (http://www.ladyada.net)
- example added 9 Jul 2009
- by Tom Igoe
- modified 22 Nov 2010
- by Tom Igoe
-
- This example code is in the public domain.
-
- http://www.arduino.cc/en/Tutorial/LiquidCrystal
- */
-
 // include the library code:
 #include "GameField.h"
 const byte LCD_WIDTH = 84;
@@ -37,17 +6,16 @@ const byte FIELD_SIZE = 16;
 const byte SCORE_WIDTH = 32;
 unsigned int prev_time;
 unsigned int curr_time;
-int local_score=0;
+int local_score = 0;
 #define RIGHT_pin 3
 #define LEFT_pin 5
 #define FIRE_pin 6
 
 #include <LCD5110_Graph.h>
 #include <avr/pgmspace.h>
-LCD5110 lcd(9,10,11,13,12); // LCD5110(SCK, MOSI, DC, RST, CS);
+LCD5110 lcd(9,10,11,12,13); // LCD5110(SCK, MOSI, DC, RST, CS);
 
 extern unsigned char SmallFont[];
-// initialize the library with the numbers of the interface pins
 
 
 void DrawPlayer(int height, int width){// h, w: left_top of object 
@@ -85,12 +53,9 @@ void ClrBullet(int height, int width){
 void DrawBlock(int height, int width){
   lcd.drawRect(width*3,height*3,width*3+2,height*3+2);
 }
-void GameField::PrintField()//modify
+void GameField::PrintField()
 {
   lcd.clrScr();
-  //system("cls");
-  //std::cout << "your score = " << score << std::endl;
-  //Serial.println("draw field");
   lcd.print("SCORE",RIGHT,8);
   lcd.printNumI(local_score,RIGHT, 16);
   for (int i = 0; i < FIELD_SIZE; i++) {
@@ -98,16 +63,10 @@ void GameField::PrintField()//modify
       for (int j = 0; j < FIELD_SIZE; j++){
         if (game_field[i][j] == 1)DrawUndestructBlock(i,j); //undestructBlock
         else if (game_field[i][j] == 2)DrawBlock(i,j); //destructBlock
-        else if (game_field[i][j] == 3){
-          DrawPlayer(i,j); //player
-          //Serial.print(i);
-          //Serial.print(" ");
-          //Serial.print(j);
+        else if (game_field[i][j] == 3)DrawPlayer(i,j); //player
         }
-        
-    }
-  }
-  lcd.update();
+      }
+   lcd.update();
 }
 
 
@@ -119,12 +78,8 @@ void setup() {
       pinMode(FIRE_pin, INPUT_PULLUP);
       pinMode(7,OUTPUT);
       digitalWrite(7,LOW);
-  // set up the LCD's number of columns and rows:
-  //lcd.begin(LCD_WIDTH,LCD_HEIGHT);
-  // Print a message to the LCD.
   lcd.InitLCD();
   lcd.setFont(SmallFont);
-  //DrawPlayer(15,8);
   Serial.begin(115200);
   prev_time=millis();
 }
@@ -139,15 +94,15 @@ curr_line = 0;//start trigger
   while (!player.field.isGameOver) {
       curr_time = millis();
       
-      if(curr_time-prev_time > 5000 | curr_line == 0) {//time-millis()
+      if(curr_time - prev_time > 5000 | curr_line == 0) {//if 5 seconds passed
         Serial.print("new line created");
           player.field.CreateNewLine(0);
           player.field.PrintField();
           prev_time = millis();
-          curr_line=1;
+          curr_line = 1;
       }
       
-        else if(digitalRead(RIGHT_pin)==LOW){ 
+        else if(digitalRead(RIGHT_pin) == LOW){ 
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveRight();
             //Serial.println("RIGHT!");
@@ -155,7 +110,7 @@ curr_line = 0;//start trigger
             lcd.update();
         }
         
-        else if(digitalRead(LEFT_pin)==LOW){ 
+        else if(digitalRead(LEFT_pin) == LOW){ 
             ClrBullet(player.getHeight(),player.getWidth());
             player.moveLeft();//delay(50);
             //Serial.println("LEFT!");
@@ -163,26 +118,26 @@ curr_line = 0;//start trigger
             lcd.update();
         }
         
-        else if(digitalRead(FIRE_pin)==LOW){
+        else if(digitalRead(FIRE_pin) == LOW){
           //Serial.println("FIRE!");
             bullet_flag = false;
-            for (int i=1; i<=FIELD_SIZE; i++){
+            for (int i=1; i <= FIELD_SIZE; i++){
                           
-              if(i>2)ClrBullet(FIELD_SIZE-i+1,player.getWidth()); 
+              if(i>2)ClrBullet(FIELD_SIZE - i+1,player.getWidth()); 
               if(bullet_flag){
-                DrawUndestructBlock(FIELD_SIZE-i+1,player.getWidth());
+                DrawUndestructBlock(FIELD_SIZE - i+1,player.getWidth());
                 lcd.update();
                 break;
               }
-              if(i!=1)DrawBullet(FIELD_SIZE-i,player.getWidth());             
+              if(i!=1)DrawBullet(FIELD_SIZE - i,player.getWidth());             
               if(i==FIELD_SIZE)ClrBullet(0,player.getWidth());
               
-              if(player.shoot_check(player.getWidth(),FIELD_SIZE-i)==1){//bullet on undestruct block situation
-                DrawUndestructBlock(FIELD_SIZE-i,player.getWidth());
+              if(player.shoot_check(player.getWidth(),FIELD_SIZE - i) == 1){//bullet on undestruct block situation
+                DrawUndestructBlock(FIELD_SIZE - i,player.getWidth());
                 bullet_flag=true;
               }
-              if(player.shoot_check(player.getWidth(),FIELD_SIZE-i)==2){//bullet on destruct block situation
-                ClrBullet(FIELD_SIZE-i+1,player.getWidth());
+              if(player.shoot_check(player.getWidth(),FIELD_SIZE - i) == 2){//bullet on destruct block situation
+                ClrBullet(FIELD_SIZE - i+1,player.getWidth());
                 break;
               }
               delay(40);

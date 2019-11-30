@@ -37,13 +37,8 @@ void GameField::CreateNewLine(int line_num) {
     else if ((randNum <= 7) and (randNum >= 3))game_field[line_num][i] = 2;
     else game_field[line_num][i] = 0;
   } 
-  //
- 
   
 }
-
-
-
 
 Player::Player()
 {
@@ -57,47 +52,31 @@ Player::Player(int w, int h)
   height = h;
   field.setFieldAt(w, h, 3);
 }
+
 void Player::moveLeft()
 {
-  if (width != 0) {
-    width--;
+    field.setFieldAt(width, height, 0);
+    if (width != 0)width--;
+    else width = FIELD_SIZE-1;
+    
     int pos_idx = field.getFieldAt(width, height);
     if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
-    field.setFieldAt(width, height, 3);
-    field.setFieldAt(width+1, height, 0);
-  }
+    field.setFieldAt(width, height, 3);  
 }
+
 void Player::moveRight()
 {
-  if (width != FIELD_SIZE - 1) {
-    width++;
+    field.setFieldAt(width, height, 0);
+    if (width != FIELD_SIZE - 1)width++;
+    else width = 0;
+    
     int pos_idx = field.getFieldAt(width, height);
-    if ((pos_idx == 1) | (pos_idx == 2)) field.isGameOver = true;//game over
-    field.setFieldAt(width, height, 3);
-    field.setFieldAt(width-1, height, 0);
-  }
-}
-void Player::moveUp()
-{
-  if (height != 0) {
-    height--;
-    int pos_idx = field.getFieldAt(width,height);
     if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
-    field.setFieldAt(width, height, 3);
-    field.setFieldAt(width, height+1, 0);
-  }
+    field.setFieldAt(width, height, 3);  
 }
-void Player::moveDown()
-{
 
-  if (height != FIELD_SIZE - 1) {
-    height++;
-    int pos_idx = field.getFieldAt(width, height);
-    if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
-    field.setFieldAt(width, height, 3);
-    field.setFieldAt(width, height-1, 0);
-  }
-}
+
+
 int Player::shoot_check(int w, int h)
 {
     if (field.getFieldAt(w, h) == 1)return 1;

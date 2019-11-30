@@ -76,23 +76,24 @@ Player::Player(int w, int h)
 }
 void Player::moveLeft()
 {
-	if (width != 0) {
-		width--;
-		int pos_idx = field.getFieldAt(width, height);
-		if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
-		field.setFieldAt(width, height, 3);
-		field.setFieldAt(width+1, height, 0);
-	}
+	field.setFieldAt(width, height, 0);
+	if (width != 0)width--;
+	else width = LCD_WIDTH - 1;
+
+	int pos_idx = field.getFieldAt(width, height);
+	if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
+	field.setFieldAt(width, height, 3);
 }
+
 void Player::moveRight()
 {
-	if (width != LCD_WIDTH - 1) {
-		width++;
-		int pos_idx = field.getFieldAt(width, height);
-		if ((pos_idx == 1) | (pos_idx == 2)) field.isGameOver = true;//game over
-		field.setFieldAt(width, height, 3);
-		field.setFieldAt(width-1, height, 0);
-	}
+	field.setFieldAt(width, height, 0);
+	if (width != LCD_WIDTH - 1)width++;
+	else width = 0;
+
+	int pos_idx = field.getFieldAt(width, height);
+	if ((pos_idx == 1) | (pos_idx == 2))field.isGameOver = true;//game over
+	field.setFieldAt(width, height, 3);
 }
 void Player::moveUp()
 {
