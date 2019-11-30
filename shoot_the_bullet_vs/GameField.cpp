@@ -107,7 +107,6 @@ void Player::moveUp()
 }
 void Player::moveDown()
 {
-
 	if (height != LCD_HEIGHT - 1) {
 		height++;
 		int pos_idx = field.getFieldAt(width, height);

@@ -1,5 +1,3 @@
-// include the library code:
-#include "GameField.h"
 const byte LCD_WIDTH = 84;
 const byte LCD_HEIGHT = 48;
 const byte FIELD_SIZE = 16;
@@ -7,10 +5,12 @@ const byte SCORE_WIDTH = 32;
 unsigned int prev_time;
 unsigned int curr_time;
 int local_score = 0;
+
 #define RIGHT_pin 3
 #define LEFT_pin 5
 #define FIRE_pin 6
 
+#include "GameField.h"
 #include <LCD5110_Graph.h>
 #include <avr/pgmspace.h>
 LCD5110 lcd(9,10,11,12,13); // LCD5110(SCK, MOSI, DC, RST, CS);
