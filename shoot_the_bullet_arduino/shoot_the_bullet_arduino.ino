@@ -78,7 +78,7 @@ void setup() {
       pinMode(FIRE_pin, INPUT_PULLUP);
       pinMode(7,OUTPUT);
       digitalWrite(7,LOW);
-  lcd.InitLCD();
+  lcd.InitLCD(70);
   lcd.setFont(SmallFont);
   Serial.begin(115200);
   prev_time=millis();
@@ -95,7 +95,6 @@ curr_line = 0;//start trigger
       curr_time = millis();
       
       if(curr_time - prev_time > 5000 | curr_line == 0) {//if 5 seconds passed
-        Serial.print("new line created");
           player.field.CreateNewLine(0);
           player.field.PrintField();
           prev_time = millis();
@@ -130,6 +129,7 @@ curr_line = 0;//start trigger
                 break;
               }
               if(i!=1)DrawBullet(FIELD_SIZE - i,player.getWidth());             
+              
               if(i==FIELD_SIZE)ClrBullet(0,player.getWidth());
               
               if(player.shoot_check(player.getWidth(),FIELD_SIZE - i) == 1){//bullet on undestruct block situation
@@ -140,7 +140,7 @@ curr_line = 0;//start trigger
                 ClrBullet(FIELD_SIZE - i+1,player.getWidth());
                 break;
               }
-              delay(40);
+              delay(60);
             local_score = player.field.getScore();
           //button F       
             lcd.update();  
