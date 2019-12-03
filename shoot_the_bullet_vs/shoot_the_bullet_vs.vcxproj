@@ -117,10 +117,14 @@
   <ItemGroup>
     <ClCompile Include="GameField.cpp" />
     <ClCompile Include="GameField.h" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="shoot_the_bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

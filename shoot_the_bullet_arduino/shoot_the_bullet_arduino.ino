@@ -10,7 +10,8 @@ int local_score = 0;
 #define LEFT_pin 5
 #define FIRE_pin 6
 
-#include "GameField.h"
+
+#include "Player.h"
 #include <LCD5110_Graph.h>
 #include <avr/pgmspace.h>
 LCD5110 lcd(9,10,11,12,13); // LCD5110(SCK, MOSI, DC, RST, CS);
@@ -81,7 +82,7 @@ void setup() {
   lcd.InitLCD(70);
   lcd.setFont(SmallFont);
   Serial.begin(115200);
-  prev_time=millis();
+  prev_time = millis();
 }
 
 int curr_line;
